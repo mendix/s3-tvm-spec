@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  title: S3 TVM
+  version: 1.0.0
+  description: API documentation for S3 TVM.
+tags:
+- name: s3-tvm
+  description: s3 tvm specs
+paths:
+  /v1/gettoken:
+    get:
+      summary: Get Federation Token
+      operationId: gettoken
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1gettoken'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - s3-tvm
+      security:
+      - basicAuth: []
+  /v1/getcredentials:
+    get:
+      summary: Get IAM User credentials
+      operationId: getcredentials
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1getcredentials'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - s3-tvm
+      security:
+      - basicAuth: []
+components:
+  schemas:
+    v1gettoken:
+      type: object
+      properties:
+        AccessKeyId:
+          type: string
+        SecretAccessKey:
+          type: string
+        SessionToken:
+          type: string
+        Expiration:
+          type: string
+          format: date-time
+        SchemaVersion:
+          type: string
+      title: gettoken
+    v1getcredentials:
+      type: object
+      properties:
+        AccessKeyId:
+          type: string
+        SecretAccessKey:
+          type: string
+        SchemaVersion:
+          type: string
+      title: getcredentials
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+      headers:
+        WWW_Authenticate:
+          schema:
+            type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+
+security:
+  - basicAuth: []
